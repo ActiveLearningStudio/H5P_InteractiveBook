@@ -241,12 +241,12 @@ class Summary extends H5P.EventDispatcher {
    */
   addScoreProgress() {
     let totalInteractions = 0, uncompletedInteractions = 0;
-    console.log(this.chapters)
     for (const chapter of this.chapters) {
       totalInteractions += chapter.maxTasks;
-      uncompletedInteractions += chapter.tasksLeft;
+      if (chapter.tasksLeft > 0 ) {
+        uncompletedInteractions += chapter.tasksLeft;
+      }
     }
-
     const box = this.createProgress(
       this.l10n.totalScoreLabel,
       this.l10n.interactionsProgressSubtext,
@@ -286,7 +286,9 @@ class Summary extends H5P.EventDispatcher {
     let totalInteractions = 0, uncompletedInteractions = 0;
     for (const chapter of this.chapters) {
       totalInteractions += chapter.maxTasks;
-      uncompletedInteractions += chapter.tasksLeft;
+      if (chapter.tasksLeft > 0 ) {
+        uncompletedInteractions += chapter.tasksLeft;
+      }
     }
     const box = this.createProgress(this.l10n.interactionsProgress, this.l10n.interactionsProgressSubtext, Math.max(totalInteractions - uncompletedInteractions, 0), totalInteractions);
     box.classList.add("h5p-interactive-book-summary-progress-container");

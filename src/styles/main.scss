@@ -168,6 +168,11 @@ $fullscreen-button-size: 1.8em;
   }
 }
 
+.h5p-open-ended-question-input {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
 @import 'pagecontent';
 @import 'statusbar';
 @import 'navigationbar';

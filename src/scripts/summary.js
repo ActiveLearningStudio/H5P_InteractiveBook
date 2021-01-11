@@ -320,7 +320,7 @@ class Summary extends H5P.EventDispatcher {
     const wrapper = document.createElement("div");
     wrapper.classList.add('h5p-interactive-book-summary-buttons');
 
-    if (H5PIntegration.reportingIsEnabled) {
+    //if (H5PIntegration.reportingIsEnabled) {
       const submitButton = this.addButton('icon-paper-pencil', this.l10n.submitReport);
       submitButton.classList.add('h5p-interactive-book-summary-submit');
       submitButton.onclick = () => {
@@ -329,7 +329,7 @@ class Summary extends H5P.EventDispatcher {
         wrapper.classList.add('submitted');
       };
       wrapper.appendChild(submitButton);
-    }
+    //}
     wrapper.appendChild(this.createRestartButton());
     wrapper.appendChild(this.createSubmittedConfirmation());
 
@@ -636,6 +636,8 @@ class Summary extends H5P.EventDispatcher {
     scoreBar.appendTo(scorebar);
     this.wrapper.appendChild(scorebar);
   }
+
+  
 
   /**
    * Add a container to display when no interactions are made in the book

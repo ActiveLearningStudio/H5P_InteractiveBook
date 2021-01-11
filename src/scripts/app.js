@@ -549,7 +549,7 @@ export default class InteractiveBook extends H5P.EventDispatcher {
       // New chapter completed
       if (!chapter.completed) {
         chapter.completed = true;
-        chapter.instance.triggerXAPIScored(chapter.instance.getScore(), chapter.instance.getMaxScore(), 'completed');
+        //chapter.instance.triggerXAPIScored(chapter.instance.getScore(), chapter.instance.getMaxScore(), 'completed');
       }
 
       // All chapters completed

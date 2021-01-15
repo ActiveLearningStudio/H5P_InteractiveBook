@@ -326,6 +326,8 @@ class Summary extends H5P.EventDispatcher {
       submitButton.onclick = () => {
         this.trigger('submitted');
         this.parent.triggerXAPIScored(this.parent.getScore(), this.parent.getMaxScore(), 'completed');
+        this.triggerSkipped();
+        this.triggerSkippedQuestioneer();
         wrapper.classList.add('submitted');
       };
       wrapper.appendChild(submitButton);
@@ -334,6 +336,66 @@ class Summary extends H5P.EventDispatcher {
     wrapper.appendChild(this.createSubmittedConfirmation());
 
     this.wrapper.appendChild(wrapper);
+  }
+
+  /**
+   * Fetch unanswered statements
+   */
+  triggerSkipped() {
+    
+    for (const chapter of this.chapters) {
+      var sections = (chapter.sections.filter(section => section.isTask));
+      for (const section of sections) {
+        if(!section.taskDone) {
+          this.skippedStatement(section);
+        }
+      }
+    }
+  }
+
+  /**
+   * Fetch unInteracted Questioneer
+   */
+  triggerSkippedQuestioneer() {
+    for (const chapter of this.chapters) {
+      var sections = (chapter.sections.filter(section => section.content.metadata.contentType == "Questionnaire"));
+      for (const section of sections) {
+              if(!section.taskDone) { 
+                var rwa = this.createXAPIEventTemplate("answered");
+                const definition = rwa.getVerifiedStatementValue(['object', 'definition']);
+                  Object.assign(definition, {
+                    interactionType: 'compound',
+                    type: 'http://adlnet.gov/expapi/activities/cmi.interaction',
+                    description: {'en-US': ''},
+                    name: {'en-US': section.metadata.title},
+                  });
+                rwa.data.statement.object.id = "https://dev.currikistudio.org/h5p/embed/"+section.instance.contentId+"?subContentId="+section.content.subContentId;
+                rwa.data.statement.object.objectType = "Activity";
+                rwa.data.statement.verb.id = "http://id.tincanapi.com/verb/skipped";
+                rwa.data.statement.verb.display["en-US"] = "skipped";
+                this.trigger(rwa);
+                
+              }
+      }
+    }
+  }
+
+  /**
+   * To trigger the XAPI statement
+   * @param {*} section 
+   */
+  skippedStatement(section) {
+    var api_data = section.instance.getXAPIData();
+    console.log(api_data);
+    api_data.statement.context.platform = "Google Classroom";
+    var rwa = this.createXAPIEventTemplate("answered");
+    
+    rwa.data.statement.verb.id = "http://id.tincanapi.com/verb/skipped";
+    rwa.data.statement.verb.display["en-US"] = "skipped";
+    rwa.data.statement.object = api_data.statement.object;
+    rwa.data.statement.context = api_data.statement.context;
+    rwa.data.statement.result = api_data.statement.result;
+    this.trigger(rwa);
   }
 
   /**
